@@ -1,16 +1,7 @@
 import os
 import re
 
-#Bulding the pattern of data - making each two lines one string
-# def data_split(two_lines):
-#     # pat = re.compile('DATE= (\d+\/\d+\/\d+) TIME= (\d+\:\d+\:\d+)_N_(.{9}_.{4})_(.{3,5})_(.{3})\s+CYCLE_TIME: (\d+) MIN, (\d+\.\d+) SEC')
-#     # answer = re.search(pat, two_lines)
-#
-#     if answer is not None: #getting rid of None lines
-#         return answer.groups()
-#     else:
-#         pat = re.compile('DATE= (\d+\/\d+\/\d+) TIME= (\d+\:\d+\:\d+)_N_(.{9}_.{4})_(.{3,5})__(.{2,2}_(.{3})\s+CYCLE_TIME: (\d+) MIN, (\d+\.\d+) SEC')
-#         answer = re.search(pat, two_lines)
+
 
 #Making a list of all unique non 2CSH
 my_set = set()
@@ -43,11 +34,14 @@ def data_split(line1,line2):
 
     return l_date, l_time, l_item, l_prog, l_min, l_sec
 
+
+
+
 #definig the class that will hold the information from the file
 class MachineAction:
     def __init__(self, l_date, l_time, l_item, l_prog, l_min, l_sec):
         self.l_date = l_date
-        self.l_date = l_time
+        self.l_time = l_time
         self.l_item = l_item
         self.l_prog = l_prog
         self.l_min = l_min
@@ -80,6 +74,8 @@ with open(f_name, encoding = 'utf-8') as f: #encoding the file
             l_date, l_time, l_item, l_prog, l_min, l_sec  = answer
             my_ma = MachineAction(l_date = l_date, l_time = l_time, l_item = l_item, l_prog = l_prog, l_min = l_min, l_sec = l_sec)
             my_machine_actions.append(my_ma)
+            # for obj in my_machine_actions:
+            #     print(obj.l_date, obj.l_item, obj.l_prog, obj.l_min, obj.l_sec, sep=' ')
             # else:
             #     print(unified_line)
 
@@ -87,5 +83,6 @@ with open(f_name, encoding = 'utf-8') as f: #encoding the file
         elif i % 3 == 2:
             continue
 
-
+        for obj in my_machine_actions:
+            print(obj.l_date, obj.l_time, obj.l_item, obj.l_prog, obj.l_min, obj.l_sec, sep=' ')
 
