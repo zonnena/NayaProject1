@@ -2,27 +2,57 @@ import os
 import re
 
 #Bulding the pattern of data - making each two lines one string
-def data_split(two_lines):
-    pat = re.compile('DATE= (\d+\/\d+\/\d+) TIME= (\d+\:\d+\:\d+)_N_(.{9}_.{4})_(.{3,5})_(.{3})\s+CYCLE_TIME: (\d+) MIN, (\d+\.\d+) SEC')
-    answer = re.search(pat, two_lines)
+# def data_split(two_lines):
+#     # pat = re.compile('DATE= (\d+\/\d+\/\d+) TIME= (\d+\:\d+\:\d+)_N_(.{9}_.{4})_(.{3,5})_(.{3})\s+CYCLE_TIME: (\d+) MIN, (\d+\.\d+) SEC')
+#     # answer = re.search(pat, two_lines)
+#
+#     if answer is not None: #getting rid of None lines
+#         return answer.groups()
+#     else:
+#         pat = re.compile('DATE= (\d+\/\d+\/\d+) TIME= (\d+\:\d+\:\d+)_N_(.{9}_.{4})_(.{3,5})__(.{2,2}_(.{3})\s+CYCLE_TIME: (\d+) MIN, (\d+\.\d+) SEC')
+#         answer = re.search(pat, two_lines)
 
-    if answer is not None: #getting rid of None lines
-        return answer.groups()
-    #else:
+#Making a list of all unique non 2CSH
+my_set = set()
+my_set_2CSJ = set()
+
+def data_split(line1,line2):
+    line1_split = line1.split(" ")
+    cycle_text = "CYCLE_TIME:"
+    cycle_time_start = line2.find("CYCLE_TIME:")
+    cycle_time_end = cycle_time_start + len(cycle_text)
+    l_date = line1_split[1]
+    l_time = line1_split[3]
+    cycle = str(line2[cycle_time_end:].strip()).split(',')
+    items_etc = str(line2[:cycle_time_start].strip()).split("_")
+    l_item = items_etc[2]+'_'+items_etc[3]
+    l_prog = items_etc[4]
+    l_min = cycle[0]
+    l_sec = cycle[1]
+    # proper_item = None
+    # if items_etc[2].startswith('2CSH'):
+    #      proper_item = items_etc[2]+'_'+items_etc[3]
+    # if not items_etc[3].startswith('0'):
+    #     my_set.add(items_etc[(3)])
+    #     strange_prog = None
+    # if items_etc[3].startswith(('805', 'CAL', 'JOGLE', 'CHECK', '3-HINGE', 'HEAD', '397', 'T99')):
+    # #     strange_prog = items_etc[3]+'_'+items_etc[4]
 
 
+
+
+    return l_date, l_time, l_item, l_prog, l_min, l_sec
 
 #definig the class that will hold the information from the file
 class MachineAction:
-    def __init__(self, date, time, item, prog, to, mpf, minutes, seconds):
-        self.date = date
-        self.time = time
-        self.item = item
-        self.prog = prog
-        self.to = to
-        self.mpf = mpf
-        self.minutes = minutes
-        self.seconds = seconds
+    def __init__(self, l_date, l_time, l_item, l_prog, l_min, l_sec):
+        self.l_date = l_date
+        self.l_date = l_time
+        self.l_item = l_item
+        self.l_prog = l_prog
+        self.l_min = l_min
+        self.l_sec = l_sec
+
 
 
 
@@ -45,16 +75,13 @@ with open(f_name, encoding = 'utf-8') as f: #encoding the file
         elif i % 3 == 1:
             line2 = line[:-1]
             unified_line = line1 + line2
-            answer = data_split(unified_line)
+            answer = data_split(line1, line2)
             #print(i, answer)
-            if answer is not None:
-                line_date, line_time, line_item, line_prog, line_mpf, line_min, line_sec  = answer
-                my_ma = MachineAction(line_date, line_time, line_item, line_prog, line_mpf, line_min, line_sec)
-                my_machine_actions.append(my_ma)
-            else:
-                line_date, line_time, line_item, line_prog,line_to, line_mpf, line_min, line_sec = answer
-                my_ma = MachineAction(line_date, line_time, line_item, line_prog, line_mpf, line_min, line_sec)
-                my_machine_actions.append(my_ma)
+            l_date, l_time, l_item, l_prog, l_min, l_sec  = answer
+            my_ma = MachineAction(l_date = l_date, l_time = l_time, l_item = l_item, l_prog = l_prog, l_min = l_min, l_sec = l_sec)
+            my_machine_actions.append(my_ma)
+            # else:
+            #     print(unified_line)
 
 
         elif i % 3 == 2:

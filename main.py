@@ -26,15 +26,16 @@ def data_split(line1,line2):
     cycle = line2[cycle_time_end:]
 
     items_etc = str(line2[:cycle_time_start].strip()).split("_")
-    proper_item = None
-    if items_etc[2].startswith(('2CSH', '16T7302-805', '2CSJ10500', '16T7302')):
-        proper_item = items_etc[2]
-    #if not items_etc[3].startswith('0'):
-    # my_set.add(items_etc[(3)])
-    strange_prog = None
-    if items_etc[3].startswith(('805', 'CAL', 'JOGLE', 'CHECK', '3-HINGE', 'HEAD', '397', 'T99')):
-        strange_prog = items_etc[3]
+    item1 = None
+    if items_etc[2].startswith('2CSH'):
+        item1 = items_etc[2]+'_'+items_etc[3]
+    if items_etc[3].startswith('0'):
 
+        strange_prog = None
+    if items_etc[3].startswith(('805', 'CAL', 'JOGLE', 'CHECK', '3-HINGE', 'HEAD', '397', 'T99')):
+        strange_prog = items_etc[3]+'_'+items_etc[4]
+
+        print(strange_prog)
     return date, time, cycle, proper_item, strange_prog
 
 #definig the class that will hold the information from the file
