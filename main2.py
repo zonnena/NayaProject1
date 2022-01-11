@@ -1,5 +1,7 @@
 import os
 import re
+from _datetime import datetime
+
 
 
 
@@ -18,41 +20,29 @@ def data_split(line1,line2):
     items_etc = str(line2[:cycle_time_start].strip()).split("_")
     l_item = items_etc[2]+'_'+items_etc[3]
     l_prog = items_etc[4]
-    l_min = cycle[0]
-    l_sec = cycle[1]
-    # proper_item = None
-    # if items_etc[2].startswith('2CSH'):
-    #      proper_item = items_etc[2]+'_'+items_etc[3]
-    # if not items_etc[3].startswith('0'):
-    #     my_set.add(items_etc[(3)])
-    #     strange_prog = None
-    # if items_etc[3].startswith(('805', 'CAL', 'JOGLE', 'CHECK', '3-HINGE', 'HEAD', '397', 'T99')):
-    # #     strange_prog = items_etc[3]+'_'+items_etc[4]
-
-
-
+    l_min = cycle[0].split(' ')[0]
+    l_sec = cycle[1].split(' ')[1]
 
     return l_date, l_time, l_item, l_prog, l_min, l_sec
 
-
+# calculating the time difference between two actions
+def machine_action_time_diff():
+    for i in range(1, (len(my_machine_actions)-1)):
+        my_machine_actions[i].l_time_diff = my_machine_actions[i+1].l_datetime - my_machine_actions[i].l_datetime
+        #print(my_machine_actions[i].l_time_diff)
 
 
 #definig the class that will hold the information from the file
 class MachineAction:
     def __init__(self, l_date, l_time, l_item, l_prog, l_min, l_sec):
-        self.l_date = l_date
-        self.l_time = l_time
+        self.l_datetime = datetime.strptime( l_date + ' ' + l_time, '%d/%m/%y %H:%M:%S')
+        self.l_date = datetime.strptime(l_date, '%d/%m/%y').date()
+        self.l_time = datetime.strptime(l_time, '%H:%M:%S').time()
         self.l_item = l_item
         self.l_prog = l_prog
         self.l_min = l_min
         self.l_sec = l_sec
-
-
-
-
-
-
-
+        self.l_time_diff = None
 
 
 #loading files
@@ -82,7 +72,18 @@ with open(f_name, encoding = 'utf-8') as f: #encoding the file
 
         elif i % 3 == 2:
             continue
+machine_action_time_diff()
 
-        for obj in my_machine_actions:
-            print(obj.l_date, obj.l_time, obj.l_item, obj.l_prog, obj.l_min, obj.l_sec, sep=' ')
+
+#date_obj = datetime. strptime(l_date, '%d/%m/%y')
+#print(date_obj)
+# time_obj = datetime.strptime(l_time, '%H:%M:%S')
+#
+# print(time_obj)
+
+for obj in my_machine_actions:
+    #print(obj.l_date, obj.l_time, obj.l_item, obj.l_prog, obj.l_min, obj.l_sec, sep=' ')
+    print(obj.l_time_diff,  sep=' ')
+#print(len(my_machine_actions))
+
 
