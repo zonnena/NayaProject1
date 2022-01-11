@@ -3,11 +3,6 @@ import re
 from _datetime import datetime, timedelta
 
 
-#Making a list of all unique non 2CSH
-my_set = set()
-my_set_2CSJ = set()
-
-
 #defining the functions
 
 #splitting the lines
@@ -36,7 +31,7 @@ def machine_action_time_diff():
 
 
 
-
+#making a total work time for every day
 def date_list():
     my_date_list = []
     my_time_dict = {}
