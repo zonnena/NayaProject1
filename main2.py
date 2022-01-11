@@ -1,14 +1,16 @@
 import os
 import re
-from _datetime import datetime
-
-
+from _datetime import datetime, timedelta
 
 
 #Making a list of all unique non 2CSH
 my_set = set()
 my_set_2CSJ = set()
 
+
+#defining the functions
+
+#splitting the lines
 def data_split(line1,line2):
     line1_split = line1.split(" ")
     cycle_text = "CYCLE_TIME:"
@@ -32,6 +34,31 @@ def machine_action_time_diff():
         #print(my_machine_actions[i].l_time_diff)
 
 
+
+
+
+def date_list():
+    my_date_list = []
+    my_time_dict = {}
+    for d in range(1, (len(my_machine_actions)-1)):
+        if my_machine_actions[d].l_date == my_machine_actions[d+1].l_date:
+            my_date_list.append(my_machine_actions[d].l_time_diff)
+
+        else:
+            #print(len(my_date_list) ,my_machine_actions[d].l_date)
+            #sum(my_date_list)
+            #print(my_time_dict)
+            #print(sum(my_date_list, timedelta()))
+            my_time_dict[str(my_machine_actions[d].l_date)] = str(sum(my_date_list, timedelta()))
+            my_date_list = []
+    print(my_time_dict)
+
+# def total_time():
+#     my_total_time = 0
+#     for el in range(0, len(date_list())):
+#         total = total + data_list[el]
+#         print(f'The sum of work on day is {total_time()}')
+
 #definig the class that will hold the information from the file
 class MachineAction:
     def __init__(self, l_date, l_time, l_item, l_prog, l_min, l_sec):
@@ -47,7 +74,6 @@ class MachineAction:
 
 #loading files
 my_machine_actions = [] #making an empty list for the data
-
 dir_name = r'C:\Users\IMOE001\OneDrive - Matan Investing in community\Documents\Naya\project 1' # file location
 f_name = (f'{dir_name}\MAT.MPF') #loading the file
 with open(f_name, encoding = 'utf-8') as f: #encoding the file
@@ -72,18 +98,15 @@ with open(f_name, encoding = 'utf-8') as f: #encoding the file
 
         elif i % 3 == 2:
             continue
+
 machine_action_time_diff()
+date_list()
+#total_time()
 
-
-#date_obj = datetime. strptime(l_date, '%d/%m/%y')
-#print(date_obj)
-# time_obj = datetime.strptime(l_time, '%H:%M:%S')
-#
-# print(time_obj)
-
-for obj in my_machine_actions:
-    #print(obj.l_date, obj.l_time, obj.l_item, obj.l_prog, obj.l_min, obj.l_sec, sep=' ')
-    print(obj.l_time_diff,  sep=' ')
-#print(len(my_machine_actions))
-
-
+#calculating the sum of work on a given day
+day_dates = []
+def day_total():
+    for day in range(1, (len(my_machine_actions)-1)):
+        day_dates.append(my_machine_actions[i].l_date)
+        # day_total = (my_machine_actions[i].l_time_diff) + (my_machine_actions[i+1].l_time_diff)
+        # print(day_total)
