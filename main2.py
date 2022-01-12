@@ -1,5 +1,7 @@
 import os
 import re
+import operator
+import csv
 from _datetime import datetime, timedelta
 
 
@@ -28,7 +30,13 @@ def machine_action_time_diff():
         my_machine_actions[i].l_time_diff = my_machine_actions[i+1].l_datetime - my_machine_actions[i].l_datetime
         #print(my_machine_actions[i].l_time_diff)
 
-
+#calculating the sum of work on a given day
+day_dates = []
+def day_total():
+    for day in range(1, (len(my_machine_actions)-1)):
+        day_dates.append(my_machine_actions[i].l_date)
+        # day_total = (my_machine_actions[i].l_time_diff) + (my_machine_actions[i+1].l_time_diff)
+        # print(day_total)
 
 
 #making a total work time for every day
@@ -44,15 +52,13 @@ def date_list():
             #sum(my_date_list)
             #print(my_time_dict)
             #print(sum(my_date_list, timedelta()))
-            my_time_dict[str(my_machine_actions[d].l_date)] = str(sum(my_date_list, timedelta()))
+            my_time_dict[str(my_machine_actions[d].l_date)] = [sum(my_date_list, timedelta()),str(sum(my_date_list, timedelta()))]
             my_date_list = []
-    print(my_time_dict)
+    #print(my_time_dict)
 
-# def total_time():
-#     my_total_time = 0
-#     for el in range(0, len(date_list())):
-#         total = total + data_list[el]
-#         print(f'The sum of work on day is {total_time()}')
+    print(max(my_time_dict.values())[1])
+    #print(max(my_time_dict.items(), key=operator.itemgetter(0))[1])
+
 
 #definig the class that will hold the information from the file
 class MachineAction:
@@ -85,23 +91,22 @@ with open(f_name, encoding = 'utf-8') as f: #encoding the file
             l_date, l_time, l_item, l_prog, l_min, l_sec  = answer
             my_ma = MachineAction(l_date = l_date, l_time = l_time, l_item = l_item, l_prog = l_prog, l_min = l_min, l_sec = l_sec)
             my_machine_actions.append(my_ma)
-            # for obj in my_machine_actions:
-            #     print(obj.l_date, obj.l_item, obj.l_prog, obj.l_min, obj.l_sec, sep=' ')
-            # else:
-            #     print(unified_line)
+
 
 
         elif i % 3 == 2:
             continue
 
-machine_action_time_diff()
-date_list()
-#total_time()
 
-#calculating the sum of work on a given day
-day_dates = []
-def day_total():
-    for day in range(1, (len(my_machine_actions)-1)):
-        day_dates.append(my_machine_actions[i].l_date)
-        # day_total = (my_machine_actions[i].l_time_diff) + (my_machine_actions[i+1].l_time_diff)
-        # print(day_total)
+
+    for obj in my_machine_actions:
+       print(obj.l_date, obj.l_time, obj.l_item, obj.l_prog, obj.l_min, obj.l_sec, sep=' ')
+
+
+    with open('machine.csv', 'w', newline='')as csvfile:
+        fieldnames = ['DATE', 'TIME', 'ITEM', 'PROG', 'MINUTS', 'SECONDS']
+        thewriter = csv.DictWriter(csvfile, fieldnames=fieldnames)
+        thewriter.writeheader()
+        for obj in my_machine_actions:
+            thewriter.writerow({'DATE':obj.l_date, 'TIME':obj.l_time, 'ITEM':obj.l_item, 'PROG':obj.l_prog,
+                                'MINUTS':obj.l_min, 'SECONDS':obj.l_sec })
